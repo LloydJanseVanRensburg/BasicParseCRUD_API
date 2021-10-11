@@ -1,8 +1,10 @@
+require('dotenv').config();
+
 const express = require('express');
-const Parse = require('parse/node');
 const morgan = require('morgan');
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
+const initParse = require('./modules/initParse');
 
 const options = {
   definition: {
@@ -14,7 +16,7 @@ const options = {
     },
     servers: [
       {
-        url: 'http://localhost:3000',
+        url: 'http://localhost:8080',
       },
     ],
   },
@@ -25,10 +27,22 @@ const specs = swaggerJsDoc(options);
 
 const app = express();
 
+app.use(express.json());
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
 app.use(morgan('dev'));
 
+// Routes
+app.use('/api/v1/posts', require('./routes/postRoutes'));
 app.use('/api/v1/users', require('./routes/userRoutes'));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+const appId = process.env.PARSE_APP_ID;
+const javascriptKey = process.env.PARSE_JS_KEY;
+const masterKey = process.env.PARSE_MASTER_KEY;
+const serverUrl = process.env.PARSE_SERVER_URL;
+
+app.listen(PORT, () => {
+  initParse(appId, javascriptKey, masterKey, serverUrl);
+  console.log(`Servering on port ${PORT}`);
+});

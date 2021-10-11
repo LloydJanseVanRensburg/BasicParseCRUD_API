@@ -45,19 +45,35 @@ router.get('/:userId', userControllers.getUserById);
 
 /**
  * @swagger
- * /api/v1/users/:
+ * /api/v1/users/register:
  *  post:
- *    summary: Create a new user and returns the newly created user
+ *    summary: Register and create a new user
  *    tags: [Users]
  *    responses:
  *      200:
- *        description: The list of the books
+ *        description: Returns logged in user
  *      400:
  *        description: Bad Request
  *      500:
  *        description: Internal Server Error
  */
-router.post('/', userControllers.createNewUser);
+router.post('/register', userControllers.register);
+
+/**
+ * @swagger
+ * /api/v1/users/login:
+ *  post:
+ *    summary: Login a returning user
+ *    tags: [Users]
+ *    responses:
+ *      200:
+ *        description: Authenticated user and token
+ *      400:
+ *        description: Bad Request
+ *      500:
+ *        description: Internal Server Error
+ */
+router.post('/login', userControllers.login);
 
 /**
  * @swagger

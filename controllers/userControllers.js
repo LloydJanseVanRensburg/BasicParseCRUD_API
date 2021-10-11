@@ -6,8 +6,12 @@ exports.getUserById = async (req, res, next) => {
   res.send('Get User By Id Controller Fired');
 };
 
-exports.createNewUser = async (req, res, next) => {
-  res.send('Create New User Controller Fired');
+exports.register = async (req, res, next) => {
+  res.send('Register User Controller Fired');
+};
+
+exports.login = async (req, res, next) => {
+  res.send('Login User Controller Fired');
 };
 
 exports.updateUserById = async (req, res, next) => {
