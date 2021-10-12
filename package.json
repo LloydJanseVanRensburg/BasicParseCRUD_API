@@ -17,8 +17,7 @@
     "morgan": "^1.10.0",
     "parse": "^3.3.1",
     "restify": "^8.6.0",
-    "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.1.6"
+    "restify-swagger-jsdoc": "^3.2.4"
   },
   "devDependencies": {
     "@types/morgan": "^1.9.3",

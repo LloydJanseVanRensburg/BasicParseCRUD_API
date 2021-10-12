@@ -1,15 +1,26 @@
-const Parse = require('parse/node');
+import Parse from 'parse/node';
+import restify from 'restify';
 
-exports.getAllPosts = async (req, res, next) => {
+exports.getAllPosts = async (
+  req: restify.Request,
+  res: restify.Response,
+  next: restify.Next
+) => {
   const Post = Parse.Object.extend('Post');
   const query = new Parse.Query(Post);
 
   const allPostsList = await query.findAll();
 
   res.json({ allPostsList });
+
+  next();
 };
 
-exports.getPostById = async (req, res, next) => {
+exports.getPostById = async (
+  req: restify.Request,
+  res: restify.Response,
+  next: restify.Next
+) => {
   const Post = Parse.Object.extend('Post');
   const query = new Parse.Query(Post);
 
@@ -18,9 +29,15 @@ exports.getPostById = async (req, res, next) => {
   const post = await query.find();
 
   res.json({ post });
+
+  next();
 };
 
-exports.createNewPost = async (req, res, next) => {
+exports.createNewPost = async (
+  req: restify.Request,
+  res: restify.Response,
+  next: restify.Next
+) => {
   const Post = Parse.Object.extend('Post');
   const post = new Post();
   post.set('title', 'This is post three');
@@ -35,9 +52,15 @@ exports.createNewPost = async (req, res, next) => {
   console.log(savedPost.get('content'));
 
   res.send({ savedPost });
+
+  next();
 };
 
-exports.updatePostById = async (req, res, next) => {
+exports.updatePostById = async (
+  req: restify.Request,
+  res: restify.Response,
+  next: restify.Next
+) => {
   let objectId = req.params.id;
 
   const Post = Parse.Object.extend('Post');
@@ -46,7 +69,9 @@ exports.updatePostById = async (req, res, next) => {
   query.equalTo('objectId', objectId);
   const currentPost = await query.first();
 
-  console.log(currentPost);
+  if (!currentPost) {
+    return;
+  }
 
   let { title, content } = req.body;
 
@@ -56,9 +81,15 @@ exports.updatePostById = async (req, res, next) => {
   const updatedPost = await currentPost.save();
 
   res.json({ updatedPost });
+
+  next();
 };
 
-exports.deletePostById = async (req, res, next) => {
+exports.deletePostById = async (
+  req: restify.Request,
+  res: restify.Response,
+  next: restify.Next
+) => {
   let objectId = req.params.id;
 
   const Post = Parse.Object.extend('Post');
@@ -67,7 +98,13 @@ exports.deletePostById = async (req, res, next) => {
   query.equalTo('objectId', objectId);
   const currentPost = await query.first();
 
+  if (!currentPost) {
+    return;
+  }
+
   await currentPost.destroy();
 
-  res.status(203).json({ success: true, message: 'Post deleted' });
+  res.status(200);
+  res.json({ message: 'Delete Successful' });
+  next();
 };
