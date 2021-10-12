@@ -1,10 +1,11 @@
 require('dotenv').config();
 
-const express = require('express');
-const morgan = require('morgan');
+import restify from 'restify';
+import morgan from 'morgan';
 const swaggerUI = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
-const initParse = require('./modules/initParse');
+import initParse from './modules/initParse';
+import { config } from './constants/config.constants';
 
 const options = {
   definition: {
@@ -25,24 +26,24 @@ const options = {
 
 const specs = swaggerJsDoc(options);
 
-const app = express();
+const server = restify.createServer();
 
-app.use(express.json());
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
-app.use(morgan('dev'));
+server.use(restify.plugins.bodyParser());
+server.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
+server.use(morgan('dev'));
 
 // Routes
-app.use('/api/v1/posts', require('./routes/postRoutes'));
-app.use('/api/v1/users', require('./routes/userRoutes'));
+server.use('/api/v1/posts', require('./routes/postRoutes'));
+server.use('/api/v1/users', require('./routes/userRoutes'));
 
 const PORT = process.env.PORT || 3000;
 
-const appId = process.env.PARSE_APP_ID;
-const javascriptKey = process.env.PARSE_JS_KEY;
-const masterKey = process.env.PARSE_MASTER_KEY;
-const serverUrl = process.env.PARSE_SERVER_URL;
+const appId = config.APP_ID;
+const javascriptKey = config.JAVASCRIPT_KEY;
+const masterKey = config.MASTER_KEY;
+const serverUrl = config.SERVER_URL;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   initParse(appId, javascriptKey, masterKey, serverUrl);
   console.log(`Servering on port ${PORT}`);
 });
