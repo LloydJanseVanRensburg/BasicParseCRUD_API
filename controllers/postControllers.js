@@ -37,10 +37,37 @@ exports.createNewPost = async (req, res, next) => {
   res.send({ savedPost });
 };
 
-exports.updatePostById = (req, res, next) => {
-  res.send('Update Post By Id Controller Fired');
+exports.updatePostById = async (req, res, next) => {
+  let objectId = req.params.id;
+
+  const Post = Parse.Object.extend('Post');
+  const query = new Parse.Query(Post);
+
+  query.equalTo('objectId', objectId);
+  const currentPost = await query.first();
+
+  console.log(currentPost);
+
+  let { title, content } = req.body;
+
+  if (title) currentPost.set('title', title);
+  if (content) currentPost.set('content', content);
+
+  const updatedPost = await currentPost.save();
+
+  res.json({ updatedPost });
 };
 
-exports.deletePostById = (req, res, next) => {
-  res.send('Delete Post By Id Controller Fired');
+exports.deletePostById = async (req, res, next) => {
+  let objectId = req.params.id;
+
+  const Post = Parse.Object.extend('Post');
+  const query = new Parse.Query(Post);
+
+  query.equalTo('objectId', objectId);
+  const currentPost = await query.first();
+
+  await currentPost.destroy();
+
+  res.status(203).json({ success: true, message: 'Post deleted' });
 };
