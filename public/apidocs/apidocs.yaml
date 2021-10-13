@@ -1,0 +1,182 @@
+info:
+  title: API documentation
+  version: 1.0.0
+  description: This is a basic project using Parse - Node and Restify - with TypeScript
+basePath: /
+tags:
+  - name: Posts
+    description: API to manage POSTS
+  - name: Users
+    description: The User Managing API
+swagger: '2.0'
+paths:
+  /api/v1/posts:
+    get:
+      summary: Get a list of posts
+      tags:
+        - Posts
+      responses:
+        200:
+          description: Successfully fetched list of posts
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: '#/definitions/Post'
+    post:
+      summary: Create a new post
+      tags:
+        - Posts
+      responses:
+        201:
+          description: Successfully Created Post
+          schema:
+            type: object
+            properties:
+              objectId:
+                type: string
+                description: The auto generated objectId
+              title:
+                type: string
+                description: The title of the post
+              content:
+                type: string
+                description: The content of the post
+              createdAt:
+                type: string
+                description: Created date timestamp
+              updatedAt:
+                type: string
+                description: Last updated date timestamp
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: post
+          description: The post to be created.
+          schema:
+            $ref: '#/definitions/PostRequestBody'
+  /api/v1/users/:
+    get:
+      summary: Returns list of all users
+      tags:
+        - Users
+      responses:
+        '200':
+          description: The list of the books
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /api/v1/users/{userId}:
+    get:
+      summary: Returns the found user by id
+      tags:
+        - Users
+      parameters:
+        - name: userId
+          in: path
+          description: User ID
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: Found User Object
+        '400':
+          description: Bad Request
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+    put:
+      summary: Update user by id
+      tags:
+        - Users
+      parameters:
+        - name: userId
+          in: path
+          description: User ID
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: The list of the books
+        '400':
+          description: Bad Request
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+    delete:
+      summary: Returns list of all users
+      tags:
+        - Users
+      parameters:
+        - name: userId
+          in: path
+          description: User ID
+          type: integer
+          required: true
+      responses:
+        '200':
+          description: The list of the books
+        '400':
+          description: Bad Request
+        '404':
+          description: User not found
+        '500':
+          description: Internal Server Error
+  /api/v1/users/register:
+    post:
+      summary: Register and create a new user
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Returns logged in user
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+  /api/v1/users/login:
+    post:
+      summary: Login a returning user
+      tags:
+        - Users
+      responses:
+        '200':
+          description: Authenticated user and token
+        '400':
+          description: Bad Request
+        '500':
+          description: Internal Server Error
+definitions:
+  Post:
+    type: object
+    properties:
+      objectId:
+        type: string
+        description: auto generated post objectId
+      title:
+        type: string
+        description: This is the title of the post
+      content:
+        type: string
+        description: This is the content of the post
+      createdAt:
+        type: string
+        description: This is the created date timestamp
+      updatedAt:
+        type: string
+        description: This is the last updated date timestamp
+  PostRequestBody:
+    type: object
+    properties:
+      title:
+        type: string
+        description: This is the title of the post
+      content:
+        type: string
+        description: This is the content of the post

@@ -26,7 +26,7 @@ restifySwaggerJsdoc.createSwaggerPage({
   path: '/api-docs',
   description:
     'This is a basic project using Parse - Node and Restify - with TypeScript',
-  apis: ['./src/routes/*.ts'],
+  apis: ['./public/apidocs/apidocs.yaml'],
 });
 
 server.listen(PORT, () => {
